@@ -1,0 +1,47 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.0.0"
+    id "net.kyori.indra" version "2.0.5"
+    id 'java'
+}
+
+group = 'fi.fabianadrian'
+version = '1.1.0'
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+}
+
+dependencies {
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    implementation 'org.spongepowered:configurate-yaml:4.1.1'
+}
+
+/*compileJava {
+    options.compilerArgs += ["-parameters"]
+    options.fork = true
+    options.forkOptions.executable = 'javac'
+    options.release.set(11)
+}*/
+
+indra {
+    javaVersions().target(11)
+}
+
+shadowJar {
+    relocate 'org.spongepowered.configurate', 'fi.fabianadrian.speedlimiter.configurate'
+}
+
+build {
+    dependsOn(shadowJar)
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [version: version]
+        duplicatesStrategy(DuplicatesStrategy.INCLUDE)
+    }
+}
