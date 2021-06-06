@@ -1,6 +1,6 @@
 # Cooldown in seconds. Set to '0' to disable.
 cooldowns:
   firework-boost: 5
-  trident-riptide: 15
+  trident-riptide: 10
 
 disabled-worlds: []
