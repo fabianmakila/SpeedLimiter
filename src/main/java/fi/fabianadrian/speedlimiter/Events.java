@@ -1,8 +1,10 @@
 package fi.fabianadrian.speedlimiter;
 
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
+import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,12 +12,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRiptideEvent;
+import org.spongepowered.configurate.serialize.SerializationException;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Events implements Listener {
 
     private final SpeedLimiter plugin;
     private final CooldownManager cooldownManager;
     private final ChatManager chatManager;
+
+    private Set<String> disabledWorlds = new HashSet<>();
 
 
     public Events(SpeedLimiter plugin) {
@@ -24,10 +33,14 @@ public class Events implements Listener {
         chatManager = plugin.getChatManager();
     }
 
+    private boolean isDisabledWorld(World world) {
+        return plugin.getConfigManager().getDisabledWorlds().contains(world.getName());
+    }
+
     @EventHandler
     public void onElytraBoost(PlayerElytraBoostEvent event) {
 
-        if (event.getPlayer().hasPermission("speedlimiter.bypass")) return;
+        if (event.getPlayer().hasPermission("speedlimiter.bypass") || isDisabledWorld(event.getPlayer().getWorld())) return;
 
         long cooldown = cooldownManager.getCooldown(event.getPlayer().getUniqueId());
         if (cooldown > 0) {
@@ -44,7 +57,7 @@ public class Events implements Listener {
 
         Player player = event.getPlayer();
 
-        if (player.hasPermission("speedlimiter.bypass")) return;
+        if (player.hasPermission("speedlimiter.bypass") || isDisabledWorld(event.getPlayer().getWorld())) return;
 
         long cooldown = cooldownManager.getCooldown(event.getPlayer().getUniqueId());
         if (cooldown > 0) {
@@ -69,7 +82,7 @@ public class Events implements Listener {
         if (!(event.getEntity() instanceof Player) || event.isGliding()) return;
 
         Player player = (Player) event.getEntity();
-        if (player.hasPermission("speedlimiter.bypass") || player.getLocation().getBlock().getRelative(BlockFace.DOWN, 1).getType() == Material.AIR)
+        if (player.hasPermission("speedlimiter.bypass") || isDisabledWorld(player.getWorld()) || player.getLocation().getBlock().getRelative(BlockFace.DOWN, 1).getType() == Material.AIR)
             return;
 
         cooldownManager.removePlayer(player.getUniqueId());

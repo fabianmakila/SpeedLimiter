@@ -8,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.spongepowered.configurate.ConfigurateException;
 
 public class Commands implements CommandExecutor {
 
@@ -26,7 +27,14 @@ public class Commands implements CommandExecutor {
         if (!sender.hasPermission("speedlimiter.admin")) return false;
 
         if (args.length > 0 && "reload".equalsIgnoreCase(args[0])) {
-            chatManager.sendChatMessage(sender, "plugin-reload");
+            try {
+                plugin.getConfigManager().load();
+                chatManager.sendChatMessage(sender, "reload-complete");
+            } catch (ConfigurateException e) {
+                chatManager.sendChatMessage(sender, "reload-failed");
+                e.printStackTrace();
+            }
+
             return true;
         }
 

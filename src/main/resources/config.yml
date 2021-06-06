@@ -1,8 +1,6 @@
 # Cooldown in seconds. Set to '0' to disable.
 cooldowns:
-  elytra: 5
-  trident: 15
+  firework-boost: 5
+  trident-riptide: 15
 
-messages:
-  plugin-reload: "&aReload complete!"
-  cooldown-left: "&6Please wait &f{0} seconds &6before using that again!"
+disabled-worlds: []

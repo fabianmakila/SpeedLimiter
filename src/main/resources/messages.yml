@@ -1,0 +1,4 @@
+reload-complete: "&aReload complete!"
+reload-failed: "&cReload failed! Check console for more details."
+
+cooldown-left: "&6Please wait &f{0} seconds &6before using that again!"

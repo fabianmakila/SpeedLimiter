@@ -17,10 +17,10 @@ public class CooldownManager {
         int length = 0;
         switch (cooldownType) {
             case FIREWORK:
-                length = configManager.getCooldownNode().node("firework").getInt(5);
+                length = configManager.getCooldownNode().node("firework-boost").getInt(5);
                 break;
             case TRIDENT:
-                length = configManager.getCooldownNode().node("trident").getInt(15);
+                length = configManager.getCooldownNode().node("trident-riptide").getInt(15);
                 break;
         }
 
