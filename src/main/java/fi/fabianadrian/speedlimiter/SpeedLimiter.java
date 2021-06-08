@@ -26,6 +26,7 @@ public class SpeedLimiter extends JavaPlugin {
         return chatManager;
     }
 
+    @Override
     public void onEnable() {
 
         PluginManager pluginManager = Bukkit.getPluginManager();
@@ -50,6 +51,7 @@ public class SpeedLimiter extends JavaPlugin {
         pluginManager.registerEvents(new Events(this), this);
     }
 
+    @Override
     public void onDisable() {
         Bukkit.getScheduler().cancelTasks(this);
     }
