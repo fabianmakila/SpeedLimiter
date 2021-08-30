@@ -14,15 +14,10 @@ public class CooldownManager {
     }
 
     public void updateCooldown(UUID uuid, CooldownType cooldownType) {
-        int length = 0;
-        switch (cooldownType) {
-            case FIREWORK:
-                length = configManager.getCooldownNode().node("firework-boost").getInt(5);
-                break;
-            case TRIDENT:
-                length = configManager.getCooldownNode().node("trident-riptide").getInt(15);
-                break;
-        }
+        int length = switch (cooldownType) {
+            case FIREWORK -> configManager.getCooldownNode().node("firework-boost").getInt(5);
+            case TRIDENT -> configManager.getCooldownNode().node("trident-riptide").getInt(15);
+        };
 
         cooldownMap.put(uuid, System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(length));
     }
