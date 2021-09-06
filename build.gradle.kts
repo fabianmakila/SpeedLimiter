@@ -1,3 +1,5 @@
+import net.kyori.indra.repository.sonatypeSnapshots
+
 plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("net.kyori.indra") version "2.0.6"
@@ -11,11 +13,13 @@ description = "Reduce chunk loading overhead by limiting how frequently players 
 
 repositories {
     mavenCentral()
+    sonatypeSnapshots()
     maven("https://papermc.io/repo/repository/maven-public/")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
+    implementation("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT")
     implementation("org.spongepowered:configurate-yaml:4.1.1")
 }
 
@@ -27,6 +31,7 @@ tasks {
     shadowJar {
         minimize()
         sequenceOf(
+            "net.kyori",
             "org.spongepowered.configurate"
         ).forEach { pkg ->
             relocate(pkg, "${group}.${rootProject.name.toLowerCase()}.lib.$pkg")

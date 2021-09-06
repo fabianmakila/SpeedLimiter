@@ -1,4 +1,4 @@
-reload-complete: "&aReload complete!"
-reload-failed: "&cReload failed! Check console for more details."
+reload-complete: "<green>Reload complete!"
+reload-failed: "<red>Reload failed! Check console for more details."
 
-cooldown-left: "&6Please wait &f{0} seconds &6before using that again!"
+cooldown-left: "<gold>Please wait <white>{0} seconds</white> before using that again!"

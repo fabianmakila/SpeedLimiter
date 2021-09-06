@@ -3,6 +3,7 @@ package fi.fabianadrian.speedlimiter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,10 +40,9 @@ public class ChatManager {
             plugin.getLogger().warning("Missing message in config: " + key);
         }
 
-        if (replacements != null)
-            string = MessageFormat.format(string, Arrays.stream(replacements).toArray());
+        if (replacements != null) string = MessageFormat.format(string, Arrays.stream(replacements).toArray());
 
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(string);
+        return MiniMessage.get().parse(string);
     }
 
     public void sendActionBar(Player player, String key, String... replacements) {
@@ -55,17 +55,5 @@ public class ChatManager {
 
     public void sendComponent(CommandSender sender, Component component) {
         sender.sendMessage(component);
-    }
-
-    private String replace(String string, String... replacements) {
-
-        if (replacements == null) return string;
-        if (replacements.length % 2 != 0) throw new IllegalStateException();
-
-        for (int i = 0; i < replacements.length; i++) {
-            string = string.replace("%" + i + "%", replacements[i]);
-        }
-
-        return string;
     }
 }
