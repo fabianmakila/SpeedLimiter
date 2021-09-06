@@ -6,7 +6,8 @@ plugins {
 }
 
 group = "fi.fabianadrian"
-version = "1.1.0"
+version = "1.2.0"
+description = "Reduce chunk loading overhead by limiting how frequently players can use fireworks or riptide trident to boost their elytra speed."
 
 repositories {
     mavenCentral()
@@ -38,7 +39,6 @@ tasks {
 
 bukkit {
     main = "fi.fabianadrian.speedlimiter.SpeedLimiter"
-    name = rootProject.name
     apiVersion = "1.17"
     authors = listOf("FabianAdrian")
     commands {
