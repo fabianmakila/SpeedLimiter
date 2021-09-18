@@ -36,7 +36,7 @@ public class Events implements Listener {
         long cooldown = cooldownManager.getCooldown(event.getPlayer().getUniqueId());
         if (cooldown > 0) {
             event.setCancelled(true);
-            chatManager.sendActionBar(event.getPlayer(), "cooldown-left", String.valueOf(cooldown));
+            chatManager.sendActionBar(event.getPlayer(), "cooldown-left", "seconds", String.valueOf(cooldown));
             return;
         }
 
@@ -53,7 +53,7 @@ public class Events implements Listener {
         if (cooldown > 0) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> player.teleport(player.getLocation()), 1);
 
-            chatManager.sendActionBar(event.getPlayer(), "cooldown-left", String.valueOf(cooldown));
+            chatManager.sendActionBar(event.getPlayer(), "cooldown-left", "seconds", String.valueOf(cooldown));
             return;
         }
 

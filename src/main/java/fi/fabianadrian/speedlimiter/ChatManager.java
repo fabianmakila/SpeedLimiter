@@ -7,9 +7,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.text.MessageFormat;
-import java.util.Arrays;
-
 public class ChatManager {
 
     private final SpeedLimiter plugin;
@@ -39,9 +36,7 @@ public class ChatManager {
             plugin.getLogger().warning("Missing message in config: " + key);
         }
 
-        if (replacements != null) string = MessageFormat.format(string, Arrays.stream(replacements).toArray());
-
-        return MiniMessage.get().parse(string);
+        return MiniMessage.get().parse(string, replacements);
     }
 
     public void sendActionBar(Player player, String key, String... replacements) {
