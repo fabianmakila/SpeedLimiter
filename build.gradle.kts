@@ -1,7 +1,7 @@
 import net.kyori.indra.repository.sonatypeSnapshots
 
 plugins {
-    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("com.github.johnrengelman.shadow") version "7.1.0"
     id("net.kyori.indra") version "2.0.6"
     id("net.minecrell.plugin-yml.bukkit") version "0.4.0"
     java
