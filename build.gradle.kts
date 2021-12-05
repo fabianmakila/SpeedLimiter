@@ -18,13 +18,13 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.18-R0.1-SNAPSHOT")
     implementation("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT")
     implementation("org.spongepowered:configurate-yaml:4.1.2")
 }
 
 indra {
-    javaVersions().target(16)
+    javaVersions().target(17)
 }
 
 tasks {
@@ -44,7 +44,7 @@ tasks {
 
 bukkit {
     main = "fi.fabianadrian.speedlimiter.SpeedLimiter"
-    apiVersion = "1.17"
+    apiVersion = "1.18"
     authors = listOf("FabianAdrian")
     commands {
         register("speedlimiter") {
