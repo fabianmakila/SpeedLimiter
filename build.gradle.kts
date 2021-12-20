@@ -20,7 +20,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.18-R0.1-SNAPSHOT")
     implementation("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT")
-    implementation("org.spongepowered:configurate-yaml:4.1.2")
+    implementation("org.spongepowered:configurate-hocon:4.1.2")
 }
 
 indra {
@@ -46,6 +46,7 @@ bukkit {
     main = "fi.fabianadrian.speedlimiter.SpeedLimiter"
     apiVersion = "1.18"
     authors = listOf("FabianAdrian")
+    website = "https://github.com/fabianmakila/SpeedLimiter"
     commands {
         register("speedlimiter") {
             permission = "speedlimiter.admin"

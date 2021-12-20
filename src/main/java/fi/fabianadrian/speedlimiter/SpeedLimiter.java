@@ -1,18 +1,17 @@
 package fi.fabianadrian.speedlimiter;
 
-import fi.fabianadrian.speedlimiter.command.Commands;
-import fi.fabianadrian.speedlimiter.command.TabCompletion;
+import fi.fabianadrian.speedlimiter.config.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.spongepowered.configurate.ConfigurateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SpeedLimiter extends JavaPlugin {
 
+    private Logger logger;
     private ConfigManager configManager;
     private CooldownManager cooldownManager;
-    private ChatManager chatManager;
 
     public ConfigManager getConfigManager() {
         return configManager;
@@ -22,33 +21,23 @@ public class SpeedLimiter extends JavaPlugin {
         return cooldownManager;
     }
 
-    public ChatManager getChatManager() {
-        return chatManager;
-    }
 
     @Override
     public void onEnable() {
+        this.logger = LoggerFactory.getLogger(this.getName());
+        this.configManager = new ConfigManager(this);
+        this.configManager.loadConfigs();
 
-        PluginManager pluginManager = Bukkit.getPluginManager();
-
-        try {
-            configManager = new ConfigManager(this);
-        } catch (ConfigurateException e) {
-            getLogger().severe("Error loading config, disabling plugin!");
-            pluginManager.disablePlugin(this);
-            return;
-        }
-
-        cooldownManager = new CooldownManager(this);
-        chatManager = new ChatManager(this);
+        this.cooldownManager = new CooldownManager(this);
 
         PluginCommand pluginCommand = getCommand("speedlimiter");
         if (pluginCommand != null) {
-            pluginCommand.setExecutor(new Commands(this));
-            pluginCommand.setTabCompleter(new TabCompletion());
+            CommandHandler commandHandler = new CommandHandler(this);
+            pluginCommand.setExecutor(commandHandler);
+            pluginCommand.setTabCompleter(commandHandler);
         }
 
-        pluginManager.registerEvents(new Events(this), this);
+        Bukkit.getPluginManager().registerEvents(new Events(this), this);
     }
 
     @Override
@@ -56,4 +45,11 @@ public class SpeedLimiter extends JavaPlugin {
         Bukkit.getScheduler().cancelTasks(this);
     }
 
+    public void reload() {
+        this.configManager.loadConfigs();
+    }
+
+    public Logger logger() {
+        return this.logger;
+    }
 }

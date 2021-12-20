@@ -1,6 +1,9 @@
 package fi.fabianadrian.speedlimiter;
 
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
+import fi.fabianadrian.speedlimiter.config.SpeedLimiterConfig;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -16,27 +19,32 @@ public class Events implements Listener {
 
     private final SpeedLimiter plugin;
     private final CooldownManager cooldownManager;
-    private final ChatManager chatManager;
+    private final SpeedLimiterConfig mainConfig;
 
-    public Events(SpeedLimiter plugin) {
-        this.plugin = plugin;
-        cooldownManager = plugin.getCooldownManager();
-        chatManager = plugin.getChatManager();
+    public Events(SpeedLimiter speedLimiter) {
+        this.plugin = speedLimiter;
+        this.cooldownManager = speedLimiter.getCooldownManager();
+        this.mainConfig = speedLimiter.getConfigManager().mainConfig();
     }
 
     private boolean isDisabledWorld(World world) {
-        return plugin.getConfigManager().getDisabledWorlds().contains(world.getName());
+        return mainConfig.disabledWorlds().contains(world.getName());
+    }
+
+    private Component cooldownComponent(long cooldown) {
+        return MiniMessage.get().parse(mainConfig.messages().cooldownLeft(), "seconds", cooldown);
     }
 
     @EventHandler
     public void onElytraBoost(PlayerElytraBoostEvent event) {
-        if (event.getPlayer().hasPermission("speedlimiter.bypass") || isDisabledWorld(event.getPlayer().getWorld()))
+        if (event.getPlayer().hasPermission(Constants.PERMISSION_BYPASS) || isDisabledWorld(event.getPlayer().getWorld()))
             return;
 
         long cooldown = cooldownManager.getCooldown(event.getPlayer().getUniqueId());
         if (cooldown > 0) {
             event.setCancelled(true);
-            chatManager.sendActionBar(event.getPlayer(), "cooldown-left", "seconds", String.valueOf(cooldown));
+
+            event.getPlayer().sendActionBar(cooldownComponent(cooldown));
             return;
         }
 
@@ -47,13 +55,13 @@ public class Events implements Listener {
     public void onPlayerRiptideEvent(PlayerRiptideEvent event) {
         Player player = event.getPlayer();
 
-        if (player.hasPermission("speedlimiter.bypass") || isDisabledWorld(event.getPlayer().getWorld())) return;
+        if (player.hasPermission(Constants.PERMISSION_BYPASS) || isDisabledWorld(event.getPlayer().getWorld())) return;
 
         long cooldown = cooldownManager.getCooldown(event.getPlayer().getUniqueId());
         if (cooldown > 0) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> player.teleport(player.getLocation()), 1);
 
-            chatManager.sendActionBar(event.getPlayer(), "cooldown-left", "seconds", String.valueOf(cooldown));
+            event.getPlayer().sendActionBar(cooldownComponent(cooldown));
             return;
         }
 
@@ -70,7 +78,7 @@ public class Events implements Listener {
     public void onEntityToggleGlide(EntityToggleGlideEvent event) {
         if (!(event.getEntity() instanceof Player player) || event.isGliding()) return;
 
-        if (player.hasPermission("speedlimiter.bypass") || isDisabledWorld(player.getWorld()) || player.getLocation().getBlock().getRelative(BlockFace.DOWN, 1).getType() == Material.AIR)
+        if (player.hasPermission(Constants.PERMISSION_BYPASS) || isDisabledWorld(player.getWorld()) || player.getLocation().getBlock().getRelative(BlockFace.DOWN, 1).getType() == Material.AIR)
             return;
 
         cooldownManager.removePlayer(player.getUniqueId());
