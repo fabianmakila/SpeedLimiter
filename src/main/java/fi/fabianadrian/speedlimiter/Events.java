@@ -32,7 +32,7 @@ public class Events implements Listener {
     }
 
     private Component cooldownComponent(long cooldown) {
-        return MiniMessage.get().parse(mainConfig.messages().cooldownLeft(), "seconds", cooldown);
+        return MiniMessage.get().parse(mainConfig.messages().cooldownLeft(), "seconds", String.valueOf(cooldown));
     }
 
     @EventHandler
